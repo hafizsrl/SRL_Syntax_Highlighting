@@ -1,0 +1,767 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "SRL",
+  "scopeName": "source.srl",
+  "patterns": [
+    {
+      "include": "#html-content"
+    },
+    {
+      "include": "#css-content"
+    },
+    {
+      "include": "#javascript-content"
+    },
+    {
+      "include": "#conditional-text"
+    },
+    {
+      "include": "#list-text"
+    },
+    {
+      "include": "#srl-variable"
+    },
+    {
+      "include": "#print-style"
+    },
+    {
+      "include": "#comments"
+    }
+  ],
+  "repository": {
+    "html-content": {
+      "begin": "(?i)(<html)",
+      "end": "(?i)(</html>)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.begin.html"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.end.html"
+        }
+      },
+      "contentName": "text.html.basic",
+      "patterns": [
+        {
+          "include": "text.html.basic"
+        }
+      ]
+    },
+    "css-content": {
+      "begin": "(?i)(<style)(?=[^>]*>)",
+      "end": "(?i)(</style>)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.begin.html"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.end.html"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "(?i)(>)",
+          "end": "(?i)(?=</style>)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.html"
+            }
+          },
+          "contentName": "source.css",
+          "patterns": [
+            {
+              "include": "source.css"
+            }
+          ]
+        }
+      ]
+    },
+    "javascript-content": {
+      "begin": "(?i)(<script)(?=[^>]*>)",
+      "end": "(?i)(</script>)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.begin.html"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.tag.end.html"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "(?i)(>)",
+          "end": "(?i)(?=</script>)",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.definition.tag.html"
+            }
+          },
+          "contentName": "source.js",
+          "patterns": [
+            {
+              "include": "source.js"
+            }
+          ]
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.srl",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.srl",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "conditional-text": {
+      "begin": "\\{\\{",
+      "end": "\\}\\}",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.conditional.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.conditional.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "keyword.control.conditional.sel.srl",
+          "match": "SEL:"
+        },
+        {
+          "include": "#condition-expression"
+        },
+        {
+          "name": "punctuation.separator.conditional.else.srl",
+          "match": "\\}\\{"
+        },
+        {
+          "name": "punctuation.separator.conditional.colon.srl",
+          "match": ":"
+        },
+        {
+          "include": "#srl-text-content"
+        }
+      ]
+    },
+    "condition-expression": {
+      "begin": "\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.group.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.group.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#field-reference"
+        },
+        {
+          "include": "#srl-variable"
+        },
+        {
+          "name": "keyword.operator.comparison.srl",
+          "match": "(!=|<=|>=|==|=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.or.srl",
+          "match": "\\s*\\|\\s*"
+        },
+        {
+          "name": "keyword.operator.logical.and.srl",
+          "match": "\\s*&\\s*"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#string-single"
+        },
+        {
+          "include": "#function-call"
+        },
+        {
+          "include": "#condition-expression"
+        }
+      ]
+    },
+    "list-text": {
+      "begin": "\\[\\[",
+      "end": "\\]\\]",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.list.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.list.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#list-entity"
+        },
+        {
+          "include": "#list-sort"
+        },
+        {
+          "include": "#list-total"
+        },
+        {
+          "include": "#list-selection"
+        },
+        {
+          "include": "#srl-text-content"
+        }
+      ]
+    },
+    "list-entity": {
+      "patterns": [
+        {
+          "name": "entity.name.type.list-entity.srl",
+          "match": "\\b[A-Z_][A-Z0-9_]*\\b(?=\\{|\\.|:)"
+        },
+        {
+          "name": "punctuation.separator.field.srl",
+          "match": "\\."
+        },
+        {
+          "begin": "\\{",
+          "end": "\\}",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.dictionary.begin.srl"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.separator.dictionary.end.srl"
+            }
+          },
+          "patterns": [
+            {
+              "name": "punctuation.separator.dictionary.srl",
+              "match": "\\."
+            },
+            {
+              "name": "entity.name.type.dictionary.srl",
+              "match": "\\b[A-Z_][A-Z0-9_]*\\b"
+            }
+          ]
+        },
+        {
+          "name": "punctuation.separator.list.srl",
+          "match": ":"
+        }
+      ]
+    },
+    "list-sort": {
+      "begin": "SRT:",
+      "end": ":",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.list.sort.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.separator.list.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#field-reference"
+        },
+        {
+          "name": "punctuation.separator.sort-field.srl",
+          "match": ","
+        },
+        {
+          "name": "keyword.operator.sort.descending.srl",
+          "match": "~"
+        }
+      ]
+    },
+    "list-total": {
+      "begin": "TOT:",
+      "end": ":",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.list.total.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.separator.list.srl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.language.total-mode.srl",
+          "match": "\\b(SUM|MIN|MAX|AVERAGE|MEDIAN|COUNT|UNIQUE|EXPRESSION|COEFFICIENT|STANDARD|VARIANCE)\\b"
+        },
+        {
+          "include": "#format-specifier"
+        }
+      ]
+    },
+    "list-selection": {
+      "begin": "SEL:",
+      "end": ":",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.list.selection.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.separator.list.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#condition-expression"
+        },
+        {
+          "include": "#old-style-condition"
+        }
+      ]
+    },
+    "old-style-condition": {
+      "patterns": [
+        {
+          "include": "#field-reference"
+        },
+        {
+          "include": "#srl-variable"
+        },
+        {
+          "name": "keyword.operator.comparison.srl",
+          "match": "(!=|<=|>=|==|=|<|>)"
+        },
+        {
+          "name": "keyword.operator.logical.and.srl",
+          "match": "\\s*&\\s*"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#prompt-variable"
+        },
+        {
+          "name": "constant.character.wildcard.srl",
+          "match": "[*?]"
+        }
+      ]
+    },
+    "srl-variable": {
+      "begin": "<<",
+      "end": ">>",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.variable.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.variable.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#field-reference"
+        },
+        {
+          "include": "#function-reference"
+        },
+        {
+          "include": "#register-reference"
+        },
+        {
+          "include": "#slp-reference"
+        },
+        {
+          "include": "#temp-variable"
+        },
+        {
+          "include": "#prompt-variable"
+        },
+        {
+          "include": "#inner-srl-variable"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#format-specifier"
+        }
+      ]
+    },
+    "inner-srl-variable": {
+      "begin": "<",
+      "end": ">",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.inner-variable.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.inner-variable.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#field-reference"
+        },
+        {
+          "include": "#function-reference"
+        },
+        {
+          "include": "#register-reference"
+        },
+        {
+          "include": "#slp-reference"
+        },
+        {
+          "include": "#temp-variable-reference"
+        },
+        {
+          "include": "#prompt-variable"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#format-specifier"
+        }
+      ]
+    },
+    "field-reference": {
+      "patterns": [
+        {
+          "name": "variable.other.field.srl",
+          "match": "\\b[A-Z_][A-Z0-9_]+(?=\\.|&|>>|>|\\s|$)"
+        },
+        {
+          "name": "punctuation.separator.field.srl",
+          "match": "\\."
+        },
+        {
+          "name": "entity.name.type.entity.srl",
+          "match": "\\b[A-Z_][A-Z0-9_]+(?=\\.|&|>>|>|\\s|$)"
+        },
+        {
+          "name": "entity.name.type.dictionary.srl",
+          "match": "\\b[A-Z_][A-Z0-9_]+(?=&|>>|>|\\s|$)"
+        }
+      ]
+    },
+    "function-reference": {
+      "patterns": [
+        {
+          "include": "#function-call"
+        },
+        {
+          "name": "support.function.srl",
+          "match": "\\$(?!\\$)[A-Z_][A-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "function-call": {
+      "begin": "\\$([a-z_][a-z0-9_]*)",
+      "end": "(?=\\s|&|>>|>|,|:|\\)|\\]|\\}|$)",
+      "beginCaptures": {
+        "0": {
+          "name": "support.function.builtin.srl"
+        },
+        "1": {
+          "name": "entity.name.function.srl"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "\\(",
+          "end": "\\)",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.parameters.begin.srl"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.parameters.end.srl"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#field-reference"
+            },
+            {
+              "include": "#string-double"
+            },
+            {
+              "include": "#string-single"
+            },
+            {
+              "include": "#temp-variable-reference"
+            },
+            {
+              "include": "#register-reference"
+            },
+            {
+              "include": "#inner-srl-variable"
+            },
+            {
+              "name": "punctuation.separator.parameter.srl",
+              "match": ","
+            },
+            {
+              "name": "constant.numeric.srl",
+              "match": "\\d+"
+            },
+            {
+              "name": "variable.parameter.srl",
+              "match": "\\$\\d+"
+            },
+            {
+              "name": "keyword.operator.comparison.srl",
+              "match": "="
+            }
+          ]
+        }
+      ]
+    },
+    "register-reference": {
+      "patterns": [
+        {
+          "name": "support.constant.register.special.srl",
+          "match": "\\$\\$(agc_code|alu_code|cen_code|clr_code|eex_code|esd_code|ipu_code|mst_code|orc_code|ppc_code|prs_code|snk_code|stu_code|usr_code|lan_code|mhd_code|mua_code|scj_code|spr_code|ual_begd|ual_begt|usr_emad|usr_lagc|usr_name|usr_syss|usr_ugrc|usr_wecc|category_list|device_type|login_mode|pop_profile|screen_height|screen_width|uniface_dir|working_dir|com_list|cpg_code|cus_dbty|cus_regn|cuscod|cusnam|cus_insl|login_page|mua_dmod|pra_code|rgd_cssc|rgd_htvc|ugl_dtas|ugl_fbas|ugl_gaes|ugl_pras|ugl_rtas)\\b"
+        },
+        {
+          "name": "support.constant.register.srl",
+          "match": "\\$\\$[A-Z_][A-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "slp-reference": {
+      "name": "variable.other.slp.srl",
+      "match": "@[A-Z_][A-Z0-9_]*\\b"
+    },
+    "temp-variable": {
+      "patterns": [
+        {
+          "include": "#temp-variable-assignment"
+        },
+        {
+          "include": "#temp-variable-reference"
+        }
+      ]
+    },
+    "temp-variable-assignment": {
+      "begin": "#([A-Z_][A-Z0-9_]*)=",
+      "end": "(?=&|>>)",
+      "beginCaptures": {
+        "0": {
+          "name": "variable.other.temp.assignment.srl"
+        },
+        "1": {
+          "name": "punctuation.definition.temp-variable.srl"
+        },
+        "2": {
+          "name": "variable.other.temp.srl"
+        },
+        "3": {
+          "name": "keyword.operator.assignment.srl"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#inner-srl-variable"
+        },
+        {
+          "include": "#string-double"
+        },
+        {
+          "include": "#temp-variable-reference"
+        },
+        {
+          "name": "keyword.operator.arithmetic.srl",
+          "match": "[+\\-*/]"
+        },
+        {
+          "name": "constant.numeric.srl",
+          "match": "\\d+"
+        }
+      ]
+    },
+    "temp-variable-reference": {
+      "name": "variable.other.temp.reference.srl",
+      "match": "#([A-Z_][A-Z0-9_]*)",
+      "captures": {
+        "0": {
+          "patterns": [
+            {
+              "name": "punctuation.definition.temp-variable.srl",
+              "match": "#"
+            },
+            {
+              "name": "variable.other.temp.srl",
+              "match": "[A-Z_][A-Z0-9_]*"
+            }
+          ]
+        }
+      }
+    },
+    "prompt-variable": {
+      "patterns": [
+        {
+          "begin": "'",
+          "end": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.srl"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.srl"
+            }
+          },
+          "contentName": "string.quoted.single.prompt.srl"
+        },
+        {
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.srl"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.srl"
+            }
+          },
+          "contentName": "string.quoted.double.prompt-value.srl"
+        }
+      ]
+    },
+    "format-specifier": {
+      "name": "keyword.other.format.srl",
+      "match": "&[A-Z0-9]+"
+    },
+    "print-style": {
+      "begin": "(?<!<)<(?!<)",
+      "end": "(?<!>)>(?!>)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.print-style.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.print-style.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "entity.name.type.print-style.srl",
+          "match": "[^>]+"
+        }
+      ]
+    },
+    "string-double": {
+      "name": "string.quoted.double.srl",
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.srl",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "string-single": {
+      "name": "string.quoted.single.srl",
+      "begin": "'",
+      "end": "'",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.srl"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.srl"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.srl",
+          "match": "\\\\."
+        },
+        {
+          "name": "constant.character.wildcard.srl",
+          "match": "[*?#&@%]"
+        }
+      ]
+    },
+    "srl-text-content": {
+      "patterns": [
+        {
+          "include": "#conditional-text"
+        },
+        {
+          "include": "#list-text"
+        },
+        {
+          "include": "#srl-variable"
+        },
+        {
+          "include": "#print-style"
+        }
+      ]
+    },
+    "entity-reference": {
+      "name": "entity.name.type.entity.srl",
+      "match": "\\.[A-Z_][A-Z0-9_]*\\b"
+    },
+    "dictionary-reference": {
+      "name": "entity.name.type.dictionary.srl",
+      "match": "\\.[A-Z_][A-Z0-9_]*\\b"
+    }
+  }
+}
+

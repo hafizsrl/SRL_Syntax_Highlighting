@@ -1,0 +1,96 @@
+// Sample SRL file demonstrating syntax highlighting
+
+Dear <<STU_FNAM.STU.SRS>> <<STU_SURN.STU.SRS>>,
+
+This is a sample letter with various SRL elements.
+
+Field Reference: <<STU_CODE.STU.SRS>>
+Function: <<$date>>
+Function with parameters: <<$hits(stu)>> <<$curocc(stu)>> <<$length(STU_SURN.STU)>>
+Register: <<$$USR_CODE>> <<$$stu_code>> <<$$mst_code>> <<$$usr_name>>
+SLP Code: <<@SLPCODE>>
+Text: <<"Hello World">>
+Temp Variable Assignment: <<#TEMP_VAR = Value>>
+Temp Variable Reference: <<#TEMP_VAR>>
+Temp Variable with Inner: <<#DEPARTMENT=<DPT_NAME.DPT>>>
+Temp Variable Calculation: <<#TOTAL=<#VALUE1>+<#VALUE2>&M>>
+Prompt: <<'Enter Name'"Default Value">>
+
+Formatted Field: <<STU_CODE.STU.SRS&L10>>
+Multiple Formats: <<STU_CODE.STU.SRS&L10&R>>
+
+Inner SRL Variable: <<This is text with <STU_CODE.STU> inside>>
+
+Conditional Text Examples:
+{{SEL:(STU_GEND.STU="M"):Text for Male students}{Text for Female students}}
+
+{{SEL:(STU_STA2.STU="D" | STU_STA2.STU="C" ):Status is C or D}}
+
+{{SEL:(MOA_CODE.SPR="11"& STS_CODE.SPR="C"):Full-time and Current student}}
+
+{{SEL:("<<SCJ_BEGD.SCJ&DYM2D2>>">"20130801"):Date is greater than 1st August 2013}}
+
+{{SEL:(CAP_BEGD.CAP = ""):Course Start Date: <<CBO_BEGD.CBO>>}}
+
+{{SEL:(STU_BKSC.STU = '##-##-##'):Valid sort code}}
+
+{{SEL:($number(SMR_UDF1.SMR) < 60):Numeric condition}}
+
+{{SEL:($date(SCJ_UDF1.SMR) < "20140801"):Date condition}}
+
+List Examples:
+
+Basic List:
+[[STU{.SRS}: 
+  Student: <<STU_CODE.STU.SRS>> - <<STU_SURN.STU.SRS>>
+]]
+
+List with Sort (SRT):
+[[SCE.SRS:SRT:SCE_CRSC,SCE_BLOK,SCE_OCCL:
+  Course: <<SCE_CRSC.SCE>> Block: <<SCE_BLOK.SCE>> Occurrence: <<SCE_OCCL.SCE>>
+]]
+
+List with Descending Sort:
+[[SMR.CAMS:SRT:AYR_CODE.SMR~,PSL_CODE.SMR:
+  Year: <<AYR_CODE.SMR>> Period: <<PSL_CODE.SMR>> Module: <<MOD_CODE.SMR>>
+]]
+
+List with Total (TOT):
+[[SMR.CAMS:TOT:SUM:<<SMR_CRED.SMR>>]]
+[[SMR.CAMS:TOT:MAX:<<SMR_AGRM.SMR>>]]
+[[SMR.CAMS:TOT:MIN:<<SMR_AGRM.SMR>>]]
+[[SMR.CAMS:TOT:AVERAGE:<<SMR_AGRM.SMR>>]]
+[[SMR.CAMS:TOT:COUNT:<<SMR_CODE.SMR>>]]
+[[SMR.CAMS:TOT:UNIQUE:<<MOD_CODE.SMR>>]]
+[[CAP.SRS:TOT:MAX&DYM2D2:<<CAP_ACCD.CAP>>]]
+
+List with Selection (New Style):
+[[CAP.SRS:SEL:(CAP_MCRC.CAP = IOI_MCRC.IOI):<<CAP_DEC1.CAP>> <<DEC_CODE.DEC=<CAP_DEC1.CAP.SRS>&GDEC_NOTE.DEC.SRS>>]]
+
+List with Multiple Selection Conditions:
+[[ESA.SRS:SEL:(ESA_MMAC.ESA = "*" & ESA_ACTN.ESA = "Y" & ESA_COMP.ESA = "N"):<<MMA_CODE.MMA&L12>> <<ESA_DPTC.ESA.SRS&L6>>]]
+
+List with Selection using OR:
+[[SAW.CAMS:SEL:(AWS_CODE.SAW = "AGREED" | AWS_CODE.SAW = "CONFER"):<<SAW_DATE.SAW&DD2 M9 Y&L18>> <<AWD_CODE.SAW>>]]
+
+List with Sort and Selection:
+[[SMR.CAMS:SRT:AYR_CODE.SMR,PSL_CODE.SMR:SEL:(SMR_CRED.SMR > 0):<<AYR_CODE.SMR>> <<PSL_CODE.SMR>> <<MOD_CODE.SMR&L10>>]]
+
+List with Total and Format:
+[[SMR.CAMS:TOT:SUM&N999:<<SMR_CRED.SMR>>]]
+
+Complex List Example:
+[[SCE.SRS:SRT:SCE_CRSC,SCE_BLOK:SEL:(SCE_STAT.SCE = "A"):TOT:COUNT:<<SCE_CODE.SCE>> - <<CRS_TITL.CRS>>]]
+
+Print Style:
+<BOLD>This text is bold</BOLD>
+
+Free format text can contain anything including HTML:
+<html>
+<body>
+<h1>Report</h1>
+<p>Content here</p>
+</body>
+</html>
+
+

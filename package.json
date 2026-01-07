@@ -1,0 +1,46 @@
+{
+  "name": "srl-syntax",
+  "displayName": "SRL Syntax Highlighting",
+  "description": "Syntax highlighting for SRL (Standard Report Language)",
+  "version": "1.0.0",
+  "author": {
+    "name": "hafiz musa",
+    "url": "https://hafizmusa.org"
+  },
+  "publisher": "hafizmusa",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "srl",
+        "aliases": [
+          "SRL",
+          "Standard Report Language"
+        ],
+        "extensions": [
+          ".srl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "srl",
+        "scopeName": "source.srl",
+        "path": "./syntaxes/srl.tmLanguage.json"
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT"
+}
+
+
