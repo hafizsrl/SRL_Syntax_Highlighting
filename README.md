@@ -8,7 +8,7 @@ A VS Code extension that provides syntax highlighting for SRL (Standard Report L
 
 ## Author
 
-**hafiz musa** - [hafizmusa.org](https://hafizmusa.org)
+**hafiz musa** 
 
 ## Citation
 
